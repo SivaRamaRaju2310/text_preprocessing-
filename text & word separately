@@ -1,0 +1,29 @@
+Text Processing
+
+book = pd.read_csv("D://INTERNSHIP//CSV FILES//Hamspam.csv", encoding='latin1')
+book = [text.strip() for text in book.text]
+book = [i for i in book if i]
+text = ' '.join(book)
+no_punc_text = text.translate(str.maketrans('', '', string.punctuation))
+text_tokens = word_tokenize(no_punc_text)
+no_stop_tokens = [word for word in text_tokens if not word in my_stop_words]
+lower_words = [x.lower() for x in no_stop_tokens]
+ps = PorterStemmer()
+stemmed_tokens = [ps.stem(word) for word in lower_words]
+nlp = spacy.load('en_core_web_sm')
+doc = nlp(' '.join(stemmed_tokens))
+lemmas = [token.lemma_ for token in doc]
+
+
+Word Cloud Generation
+
+def plot_cloud(wordcloud):
+    plt.figure(figsize=(40, 30))
+    plt.imshow(wordcloud)
+    plt.axis("off")
+
+stopwords = set(STOPWORDS)
+stopwords.update(['will', 'ok', 'now', 'u'])
+wordcloud = WordCloud(width=3000, height=2000, background_color="black", max_words=100, colormap="Set2", stopwords=stopwords).generate(text)
+plot_cloud(wordcloud)
+wordcloud.to_file('wordcloud.png')
